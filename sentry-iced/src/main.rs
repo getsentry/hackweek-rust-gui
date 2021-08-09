@@ -1,30 +1,43 @@
-use iced::{executor, Application, Clipboard, Command, Element, Settings, Text};
+use iced::{button, Align, Button, Column, Element, Length, Sandbox, Settings, Text};
 
-struct Hello;
+struct Hello {
+    counter: usize,
+    button: button::State,
+}
 
-impl Application for Hello {
-    type Executor = executor::Default;
-    type Message = ();
-    type Flags = ();
+#[derive(Debug, Clone, Copy)]
+enum Message {
+    Inc,
+}
 
-    fn new(_flags: ()) -> (Self, Command<Self::Message>) {
-        (Self, Command::none())
+impl Sandbox for Hello {
+    type Message = Message;
+
+    fn new() -> Self {
+        Self {
+            counter: 0,
+            button: button::State::new(),
+        }
     }
 
     fn title(&self) -> String {
         String::from("Hello World!")
     }
 
-    fn update(
-        &mut self,
-        _message: Self::Message,
-        _clipboard: &mut Clipboard,
-    ) -> Command<Self::Message> {
-        Command::none()
+    fn update(&mut self, message: Self::Message) {
+        match message {
+            Message::Inc => self.counter += 1,
+        }
     }
 
     fn view(&mut self) -> Element<Self::Message> {
-        Text::new("hello world!").into()
+        Column::new()
+            .push(Text::new("hello world!"))
+            .push(Text::new(self.counter.to_string()))
+            .push(Button::new(&mut self.button, Text::new("+")).on_press(Message::Inc))
+            .align_items(Align::Center)
+            .width(Length::Fill)
+            .into()
     }
 }
 
