@@ -8,12 +8,14 @@ crash reports and gather user feedback.
 As this is basically a research project into the Rust GUI landscape, we would like to experiment with following
 projects/toolkits:
 
-- https://github.com/linebender/druid
-- https://github.com/sixtyfpsui/sixtyfps
-- https://github.com/hecrj/iced
-- https://github.com/antoyo/relm
-- https://github.com/fschutt/azul
-- https://github.com/anp/moxie
+| Toolkit                                            | Demo                         |
+| -------------------------------------------------- | ---------------------------- |
+| [druid](https://github.com/linebender/druid)       | [sentry-druid](sentry-druid) |
+| [sixtyfps](https://github.com/sixtyfpsui/sixtyfps) | [sentry-sixty](sentry-sixty) |
+| [iced](https://github.com/hecrj/iced)              | [sentry-iced](sentry-iced)   |
+| [relm](https://github.com/antoyo/relm)             | -                            |
+| [azul](https://github.com/fschutt/azul)            | -                            |
+| [moxie](https://github.com/anp/moxie)              | -                            |
 
 Depending on time, we can create a GUI in some or all of these frameworks, to get a feel for what the capabilities are
 for each one.
