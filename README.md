@@ -13,6 +13,7 @@ projects/toolkits:
 - https://github.com/hecrj/iced
 - https://github.com/antoyo/relm
 - https://github.com/fschutt/azul
+- https://github.com/anp/moxie
 
 Depending on time, we can create a GUI in some or all of these frameworks, to get a feel for what the capabilities are
 for each one.
