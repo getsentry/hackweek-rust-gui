@@ -4,8 +4,10 @@ use druid::{
 };
 
 fn main() -> Result<(), PlatformError> {
-    let main_window = WindowDesc::new(ui_builder);
-    AppLauncher::with_window(main_window).launch(HelloState::default())
+    let main_window = WindowDesc::new(ui_builder());
+    AppLauncher::with_window(main_window)
+        .localization_resources(vec!["crashreporter.ftl".into()], "./resources/l18n".into())
+        .launch(HelloState::default())
 }
 
 #[derive(Clone, Default, Data, Lens)]
@@ -16,7 +18,7 @@ struct HelloState {
 
 fn ui_builder() -> impl Widget<HelloState> {
     // The label text will be computed dynamically based on the current locale and count
-    let text = LocalizedString::new("hello-counter")
+    let text = LocalizedString::new("foo-bar")
         .with_arg("count", |data: &HelloState, _env| (*data).counter.into());
     let label = Label::new(text).padding(5.0).center();
     let button = Button::new("increment")
