@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-druid = "0.7.0"
+druid = { version = "0.7.0", git = "https://github.com/linebender/druid" }
