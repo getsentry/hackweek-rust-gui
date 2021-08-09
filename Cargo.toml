@@ -1,2 +1,7 @@
 [workspace]
-members = ["sentry-druid", "sentry-sixty", "sentry-iced"]
+members = [
+    "sentry-druid",
+    "sentry-iced",
+    "sentry-sixty",
+    "sentry-uploader",
+]
