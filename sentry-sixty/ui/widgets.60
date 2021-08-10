@@ -78,3 +78,52 @@ export SentryAccentButton := Rectangle {
         }
     }
 }
+
+export MultilineEdit := Rectangle {
+    property <string> text;
+    property <string> placeholder_text;
+    property <bool> has_focus: input.has_focus;
+    property <bool> enabled <=> input.enabled;
+    callback accepted(string);
+    callback edited(string);
+    forward-focus: input;
+
+    //border_color: root.has_focus ? Theme.highlight_background : #ffffff;
+    border_radius: 1px;
+    border_width: 2px;
+    horizontal-stretch: 1;
+    vertical-stretch: 0;
+
+    GridLayout {
+        padding: 3px;
+
+        Rectangle {
+            border_color: #ecedeb;
+            border_radius: 1px;
+            border_width: 1px;
+            background: white;
+            height: 50px;
+
+            GridLayout {
+                padding: 3px;
+                input := TextInput {
+                    text <=> root.text;
+                    accepted => {
+                        root.accepted(self.text);
+                    }
+                    edited => {
+                        root.edited(self.text);
+                    }
+                    //color: enabled ? Theme.text_color : Theme.text_color_disabled;
+                }
+                Text {
+                    //color: Theme.placeholder_text;
+                    col: 0;
+                    row: 0;
+                    text: (root.text == "" && !input.has-focus) ? root.placeholder_text : "";
+                }
+            }
+        }
+
+    }
+}

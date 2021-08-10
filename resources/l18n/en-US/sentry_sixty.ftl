@@ -1,5 +1,5 @@
-app-header-title = {$app-name} has crashed.
-app-header-subtitle = This report will be sent to {$app-name} on submission
+app-header-title = {$appname} has crashed.
+app-header-subtitle = This report will be sent to {$appname} on submission
 
 form-comment-label = Comment (optional)
 form-comment-placeholder = Give a short explanation of the steps that led to the crash
