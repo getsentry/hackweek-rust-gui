@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "sentry-druid",
+    #"sentry-druid",
     #"sentry-iced",
-    #"sentry-sixty",
+    "sentry-sixty",
     "sentry-uploader",
 ]
