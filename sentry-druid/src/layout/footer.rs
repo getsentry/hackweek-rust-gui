@@ -3,7 +3,7 @@ use druid::widget::{Button, Either, Flex};
 use druid::{LocalizedString, Widget, WidgetExt};
 
 use crate::actions::toggle_files;
-use crate::AppState;
+use crate::{theme, AppState};
 
 pub fn footer() -> impl Widget<AppState> {
     let toggle_files = Either::new(
@@ -25,4 +25,5 @@ pub fn footer() -> impl Widget<AppState> {
         .with_child(close)
         .with_child(submit)
         .expand_width()
+        .padding(theme::SECTION_PADDING)
 }
