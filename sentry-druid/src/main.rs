@@ -33,7 +33,7 @@ fn app_form() -> impl Widget<AppState> {
     // TODO: not sure how to make this work yet, the textbox does not support
     // newlines on enter, it does not enter text when you hold a key down, and it
     // does not support select-all via cmd/ctrl+a
-    let comment_textbox = TextBox::new()
+    let comment_textbox = TextBox::multiline()
         // TODO: the `with_placeholder` method does not work with localized strings :-(
         //.with_placeholder(LocalizedString::new("form-comment-placeholder"))
         .with_line_wrapping(true)
