@@ -13,11 +13,13 @@ global Theme := {
 
 export MainWindow := Window {
     callback close_clicked;
+    property header_title <=> header.title;
+    property header_subtitle <=> header.subtitle;
 
     background: white;
 
     VerticalLayout {
-        Header {}
+        header := Header {}
         Body {}
         Footer {
             close_clicked => { root.close_clicked(); }
