@@ -1,0 +1,17 @@
+export Header := VerticalLayout {
+    vertical_stretch: 0;
+    padding: 32px;
+    spacing: 4px;
+
+    Text {
+        text: "{app-title} has Crashed.";
+        font_size: 22px;
+        color: #2B1D38;
+    }
+
+    Text {
+        text: "This report will be sent to {app-title} on submission";
+        font_size: 14px;
+        color: #776589;
+    }
+}

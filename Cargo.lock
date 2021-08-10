@@ -2069,6 +2069,7 @@ name = "sentry-sixty"
 version = "0.1.0"
 dependencies = [
  "sixtyfps",
+ "sixtyfps-build",
 ]
 
 [[package]]
@@ -2216,6 +2217,17 @@ dependencies = [
  "sixtyfps-macros",
  "sixtyfps-rendering-backend-default",
  "vtable",
+]
+
+[[package]]
+name = "sixtyfps-build"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "83cde9bea7b50d0d1f21c0cf23f633292e218629df80bbec4d00debb335322c2"
+dependencies = [
+ "sixtyfps-compilerlib",
+ "spin_on",
+ "thiserror",
 ]
 
 [[package]]

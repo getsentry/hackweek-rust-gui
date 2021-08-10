@@ -1,0 +1,25 @@
+import { SentryNormalButton, SentryAccentButton } from "widgets.60";
+
+export Footer := HorizontalLayout {
+    callback close_clicked;
+    vertical_stretch: 0;
+    padding: 32px;
+    spacing: 8px;
+
+    SentryNormalButton {
+        text: "Show Files";
+    }
+
+    Rectangle {
+        horizontal_stretch: 1;
+    }
+
+    SentryNormalButton {
+        clicked => { root.close_clicked(); }
+        text: "Close";
+    }
+
+    SentryAccentButton {
+        text: "Submit";
+    }
+}

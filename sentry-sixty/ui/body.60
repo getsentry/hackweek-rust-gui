@@ -1,0 +1,7 @@
+export Body := VerticalLayout {
+    vertical_stretch: 1;
+
+    Rectangle {
+        vertical_stretch: 1;
+    }
+}

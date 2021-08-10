@@ -1,0 +1,26 @@
+import { Header } from "header.60";
+import { Body } from "body.60";
+import { Footer } from "footer.60";
+
+global Theme := {
+    property<color> outline_default: #D1CAD8;
+    property<color> outline_hover: #80708F;
+    property<color> outline_active: #E6E0EB;
+    property<color> accent_default: #6C5FC7;
+    property<color> accent_hover: #6051C2;
+    property<color> accent_active: #7C70CD;
+}
+
+export MainWindow := Window {
+    callback close_clicked;
+
+    background: white;
+
+    VerticalLayout {
+        Header {}
+        Body {}
+        Footer {
+            close_clicked => { root.close_clicked(); }
+        }
+    }
+}
