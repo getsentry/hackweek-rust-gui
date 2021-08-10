@@ -24,6 +24,14 @@ fn main() {
             .translate("app-header-subtitle", Some(&args))
             .into(),
     );
+    main_window.set_footer_show_text(
+        translations
+            .translate("app-footer-toggle-show-files", None)
+            .into(),
+    );
+    main_window.set_footer_close_text(translations.translate("app-footer-close", None).into());
+    main_window.set_footer_submit_text(translations.translate("app-footer-submit", None).into());
+
     main_window.on_close_clicked(sixtyfps::quit_event_loop);
 
     main_window.run();

@@ -15,13 +15,16 @@ export MainWindow := Window {
     callback close_clicked;
     property header_title <=> header.title;
     property header_subtitle <=> header.subtitle;
+    property footer_show_text <=> footer.show_text;
+    property footer_close_text <=> footer.close_text;
+    property footer_submit_text <=> footer.submit_text;
 
     background: white;
 
     VerticalLayout {
         header := Header {}
         Body {}
-        Footer {
+        footer := Footer {
             close_clicked => { root.close_clicked(); }
         }
     }
