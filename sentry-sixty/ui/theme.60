@@ -5,4 +5,6 @@ export global Theme := {
     property<color> accent_default: #6C5FC7;
     property<color> accent_hover: #6051C2;
     property<color> accent_active: #7C70CD;
+    property<color> background_primary: #FFFFFF;
+    property<color> background_secondary: #FAF9FB;
 }
