@@ -1523,9 +1523,9 @@ dependencies = [
 
 [[package]]
 name = "lyon_path"
-version = "0.17.4"
+version = "0.17.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d19c56b500e0b03ed3cea146557c701a28f7f83633610c1b8cff2c7251412f72"
+checksum = "d645766496fafd20a2c5d7a1f51322dc5a9065db82a982cf57e0b7723c641b23"
 dependencies = [
  "lyon_geom",
 ]
@@ -2332,6 +2332,8 @@ dependencies = [
  "i18n-embed",
  "i18n-embed-fl",
  "rust-embed",
+ "serde",
+ "serde_json",
  "sixtyfps",
  "sixtyfps-build",
  "unic-langid",
