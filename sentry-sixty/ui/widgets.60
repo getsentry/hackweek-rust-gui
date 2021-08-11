@@ -130,6 +130,7 @@ export MultilineEdit := Rectangle {
 
 export CollapsedFile := Rectangle{
     property<string> file_name;
+    property<string> button_text <=> show_button.text;
 
     border_width: 1px;
     border_radius: 4px;
@@ -152,7 +153,7 @@ export CollapsedFile := Rectangle{
         Rectangle {
             horizontal_stretch: 1;
         }
-        SentryNormalButton {
+        show_button := SentryNormalButton {
             background: Theme.background_secondary;
             text: "Show";
         }

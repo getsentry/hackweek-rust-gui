@@ -60,6 +60,7 @@ fn localize(main_window: &MainWindow, branding: &config::Branding) {
     );
     main_window.set_body_comment_label_text(fl!(loader, "form-comment-label").into());
     main_window.set_body_comment_placeholder(fl!(loader, "form-comment-placeholder").into());
+    main_window.set_body_files_label_text(fl!(loader, "app-body-files-label").into());
     main_window.set_footer_show_text(fl!(loader, "app-footer-toggle-show-files").into());
     main_window.set_footer_close_text(fl!(loader, "app-footer-close").into());
     main_window.set_footer_submit_text(fl!(loader, "app-footer-submit").into());
