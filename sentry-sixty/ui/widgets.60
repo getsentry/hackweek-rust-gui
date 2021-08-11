@@ -1,7 +1,7 @@
 import { Theme } from "theme.60";
 
 export SentryNormalButton := Rectangle {
-    callback clicked;
+    callback clicked <=> touch_area.clicked;
     property<string> text;
     property<bool> pressed: self.enabled && touch_area.pressed;
     property<bool> enabled <=> touch_area.enabled;
@@ -33,14 +33,11 @@ export SentryNormalButton := Rectangle {
     touch_area := TouchArea {
         width: root.width;
         height: root.height;
-        clicked => {
-            root.clicked();
-        }
     }
 }
 
 export SentryAccentButton := Rectangle {
-    callback clicked;
+    callback clicked <=> touch_area.clicked;
     property<string> text;
     property<bool> pressed: self.enabled && touch_area.pressed;
     property<bool> enabled <=> touch_area.enabled;
@@ -73,9 +70,6 @@ export SentryAccentButton := Rectangle {
     touch_area := TouchArea {
         width: root.width;
         height: root.height;
-        clicked => {
-            root.clicked();
-        }
     }
 }
 

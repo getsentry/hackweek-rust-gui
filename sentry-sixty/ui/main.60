@@ -12,8 +12,8 @@ global Theme := {
 }
 
 export MainWindow := Window {
-    callback close_clicked;
-    callback submit_clicked;
+    callback close_clicked <=> footer.close_clicked;
+    callback submit_clicked <=> footer.submit_clicked;
     property header_title <=> header.title;
     property header_subtitle <=> header.subtitle;
     property body_comment_label_text <=> body.comment_label_text;
@@ -32,9 +32,6 @@ export MainWindow := Window {
         body := Body {
             attachments: [{name: "test1.txt", contents: "Oh hi Mark"}, {name: "test2.txt", contents: "Imma firin mah lazor"}];
         }
-        footer := Footer {
-            close_clicked => { root.close_clicked(); }
-            submit_clicked => { root.submit_clicked(); }
-        }
+        footer := Footer {}
     }
 }
