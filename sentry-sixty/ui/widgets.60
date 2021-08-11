@@ -128,7 +128,7 @@ export MultilineEdit := Rectangle {
     }
 }
 
-export CollapsedFile := Rectangle {
+export FileBox := Rectangle {
     property<string> file_name;
     property<string> file_contents;
     property<string> show_button_text;

@@ -1,4 +1,4 @@
-import { MultilineEdit, CollapsedFile } from "widgets.60";
+import { MultilineEdit, FileBox } from "widgets.60";
 import { Theme } from "theme.60";
 
 struct Attachment := {
@@ -32,7 +32,7 @@ export Body := VerticalLayout {
         text: "Files";
     }
 
-    for file[index] in attachments: CollapsedFile {
+    for file[index] in attachments: FileBox {
         file_name: file.name;
         file_contents: file.contents;
         show_button_text: root.show_button_text;
