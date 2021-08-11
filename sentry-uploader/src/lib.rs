@@ -9,12 +9,12 @@ mod uploader;
 
 pub use uploader::Uploader;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 #[non_exhaustive]
 pub struct UserFeedback {
-    pub name: Option<String>,
-    pub email: Option<String>,
-    pub comment: Option<String>,
+    pub name: String,
+    pub email: String,
+    pub comment: String,
 }
 
 #[derive(Clone, Debug)]
@@ -25,4 +25,14 @@ pub struct Config {
     pub dsn: Dsn,
     pub org_slug: String,
     pub project_slug: String,
+}
+
+impl Config {
+    pub fn new(dsn: Dsn, org_slug: String, project_slug: String) -> Self {
+        Self {
+            dsn,
+            org_slug,
+            project_slug,
+        }
+    }
 }

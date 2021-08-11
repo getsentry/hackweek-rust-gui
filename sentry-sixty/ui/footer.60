@@ -1,10 +1,13 @@
 import { SentryNormalButton, SentryAccentButton } from "widgets.60";
 
 export Footer := HorizontalLayout {
+    callback close_clicked;
+    callback submit_clicked;
+
     property show_text <=> show_button.text;
     property close_text <=> close_button.text;
     property submit_text <=> submit_button.text;
-    callback close_clicked;
+
     vertical_stretch: 0;
     padding: 32px;
     spacing: 8px;
@@ -23,6 +26,7 @@ export Footer := HorizontalLayout {
     }
 
     submit_button := SentryAccentButton {
+        clicked => { root.submit_clicked(); }
         text: "Submit";
     }
 }

@@ -11,16 +11,72 @@ sixtyfps::include_modules!();
 
 pub mod config;
 
+fn make_mock_envelope() -> sentry_core::Envelope {
+    let mut event = sentry_core::protocol::Event::new();
+    event.message = Some(String::from("Wow, something bad happened"));
+    let mut envelope: sentry_core::Envelope = event.into();
+    envelope.add_item(sentry_core::protocol::EnvelopeItem::Attachment(
+        sentry_core::protocol::Attachment {
+            buffer: include_bytes!("main.rs").to_vec(),
+            filename: String::from("main.rs"),
+            ty: None,
+        },
+    ));
+
+    envelope
+}
+
 // TODO: make it possible to use this as a library, and call the functions
 // starting the UI from crashpad/your own app/some kind of wrapper.
 pub fn start_crash_reporter_windows(config: config::Config) {
     let main_window = MainWindow::new();
 
+    let dsn = config.sentry.dsn.parse().unwrap();
+
+    let uploader_config = sentry_uploader::Config::new(
+        dsn,
+        config.sentry.org_slug.clone(),
+        config.sentry.project_slug.clone(),
+    );
+    let uploader = sentry_uploader::Uploader::new(uploader_config);
+
+    let envelope = make_mock_envelope();
+
     localize(&main_window, &config.branding);
     main_window.on_close_clicked(sixtyfps::quit_event_loop);
+    main_window.on_submit_clicked(move || {
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+
+        // make borrow checker happy
+        let envelope = &envelope;
+        let uploader = &uploader;
+        rt.block_on(async move {
+            uploader.send_envelope(envelope).await?;
+
+            let event_id = envelope.uuid().unwrap().to_owned();
+            let mut user_feedback = sentry_uploader::UserFeedback::default();
+            // TODO: take the values from the UI, and only send user feedback if all
+            // the required fields are provided
+            user_feedback.name = String::from("Bender");
+            user_feedback.email = String::from("bender@planetexpress.earth");
+            user_feedback.comment = String::from("oh noes! its a me, user feedbackaaaa!");
+
+            uploader
+                .send_user_feedback(event_id, &user_feedback)
+                .await?;
+
+            Ok::<_, Box<dyn std::error::Error>>(())
+        })
+        .unwrap();
+        sixtyfps::quit_event_loop();
+    });
 
     main_window.run();
 }
+
 fn main() {
     start_crash_reporter_windows(config::Config {
         branding: config::Branding {

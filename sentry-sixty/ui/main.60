@@ -13,6 +13,7 @@ global Theme := {
 
 export MainWindow := Window {
     callback close_clicked;
+    callback submit_clicked;
     property header_title <=> header.title;
     property header_subtitle <=> header.subtitle;
     property body_comment_label_text <=> body.comment_label_text;
@@ -30,6 +31,7 @@ export MainWindow := Window {
         body := Body {}
         footer := Footer {
             close_clicked => { root.close_clicked(); }
+            submit_clicked => { root.submit_clicked(); }
         }
     }
 }

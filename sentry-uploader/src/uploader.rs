@@ -7,7 +7,7 @@ use crate::{Config, UserFeedback};
 pub struct Uploader {
     client: reqwest::Client,
     sentry_auth: String,
-    bearer_auth: String,
+    dsn_auth: String,
     envelope_url: String,
     user_feedback_url: String,
 }
@@ -19,14 +19,15 @@ impl Uploader {
 
         let auth = config.dsn.to_auth(None); // TODO: provide user agent?
         let sentry_auth = auth.to_string();
-        let bearer_auth = auth.public_key().to_owned();
+        let dsn_auth = format!("DSN {}", config.dsn);
 
         let envelope_url = config.dsn.envelope_api_url().to_string();
         let user_feedback_url = format!(
-            "{}://{}:{}/api/0/projects/{}/{}/user-feedback/",
-            config.dsn.scheme(),
-            config.dsn.host(),
-            config.dsn.port(),
+            "https://sentry.io/api/0/projects/{}/{}/user-feedback/",
+            // TODO: infer the API url from the dsn
+            //config.dsn.scheme(),
+            //config.dsn.host(),
+            //config.dsn.port(),
             config.org_slug,
             config.project_slug
         );
@@ -34,7 +35,7 @@ impl Uploader {
         Self {
             client,
             sentry_auth,
-            bearer_auth,
+            dsn_auth,
             envelope_url,
             user_feedback_url,
         }
@@ -58,7 +59,7 @@ impl Uploader {
         if response.status() == reqwest::StatusCode::TOO_MANY_REQUESTS {
             anyhow::bail!("DSN quota exceeded");
         }
-        let _json = response.json().await?;
+        let _json = response.text().await?;
 
         // TODO: return the event id
         // TODO: is it possible to somehow feed the upload progress back to the UI?
@@ -76,18 +77,18 @@ impl Uploader {
         let request = self
             .client
             .post(&self.user_feedback_url)
-            .bearer_auth(&self.bearer_auth)
+            .header(reqwest::header::AUTHORIZATION, &self.dsn_auth)
             .json(&serde_json::json!({
-                "event_id": event_id,
+                "event_id": event_id.to_simple().to_string(),
                 // NOTE: name/email are marked as "required" in the docs, but technically
                 // you can leave them out. We would have to try and see if it works without.
                 // See https://github.com/getsentry/relay/blob/master/relay-general/src/protocol/user_report.rs
                 "name": user_feedback.name,
                 "email": user_feedback.email,
-                "comment": user_feedback.comment,
+                "comments": user_feedback.comment,
             }));
 
-        let _json = request.send().await?.json().await?;
+        let _json = request.send().await?.text().await?;
 
         // TODO: should we validate that the report has actually been submitted?
         Ok(())
