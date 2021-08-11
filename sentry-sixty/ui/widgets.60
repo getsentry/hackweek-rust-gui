@@ -130,7 +130,10 @@ export MultilineEdit := Rectangle {
 
 export CollapsedFile := Rectangle {
     property<string> file_name;
-    property<string> button_text <=> show_button.text;
+    property<string> file_contents;
+    property<string> show_button_text;
+    property<string> hide_button_text;
+    property<bool> is_expanded: false;
 
     border_width: 1px;
     border_radius: 4px;
@@ -138,24 +141,33 @@ export CollapsedFile := Rectangle {
     border_color: Theme.outline_active;
     background: Theme.background_secondary;
 
-    HorizontalLayout {
-        padding_top: 8px;
-        padding_bottom: 8px;
-        padding_left: 16px;
-        padding_right: 16px;
+    VerticalLayout {
+        if (is_expanded): contents := Text {
+            //background: Theme.background_primary;
+            text: root.file_contents;
+            font_size: 14px;
+            font_weight: 400;
+        }
+        HorizontalLayout {
+            padding_top: 8px;
+            padding_bottom: 8px;
+            padding_left: 16px;
+            padding_right: 16px;
 
-        Text {
-            font-weight: 400;
-            font-size: 14px;
-            text: root.file_name;
-            vertical_alignment: center;
-        }
-        Rectangle {
-            horizontal_stretch: 1;
-        }
-        show_button := SentryNormalButton {
-            background: Theme.background_secondary;
-            text: "Show";
+            Text {
+                font-weight: 400;
+                font-size: 14px;
+                text: root.file_name;
+                vertical_alignment: center;
+            }
+            Rectangle {
+                horizontal_stretch: 1;
+            }
+            button := SentryNormalButton {
+                background: Theme.background_secondary;
+                text: root.is_expanded ? root.hide_button_text : root.show_button_text;
+                clicked => {root.is_expanded = !root.is_expanded;}
+            }    
         }
     }
 }
