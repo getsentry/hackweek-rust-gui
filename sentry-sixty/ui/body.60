@@ -1,14 +1,17 @@
-import { MultilineEdit } from "widgets.60";
+import { MultilineEdit, CollapsedFile } from "widgets.60";
 import { Theme } from "theme.60";
 
 export Body := VerticalLayout {
     property comment_label_text <=> comment_label.text;
     property comment_placeholder <=> comment_box.placeholder_text;
+    property files_label_text <=> files_label.text;
     vertical_stretch: 1;
     padding: 32px;
     spacing: 8px;
 
     comment_label := Text {
+        font_size: 14px;
+        font_weight: 400;
         text: "Comment (optional)";
     }
     comment_box := MultilineEdit {
@@ -16,6 +19,17 @@ export Body := VerticalLayout {
 
     }
 
+    files_label := Text {
+        font_size: 14px;
+        font_weight: 400;
+        text: "Files";
+    }
+    file_test := CollapsedFile {
+        file_name: "test.txt";
+    }
+    file_test2 := CollapsedFile {
+        file_name: "test2.txt";
+    }
     Rectangle {
         vertical_stretch: 1;
     }
