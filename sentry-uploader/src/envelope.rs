@@ -51,6 +51,9 @@ impl EnvelopeItem<'_> {
                 Some(Value::String(s)) => match s.as_str() {
                     "event" => Some("Event"),
                     "attachment" => Some("Attachment"),
+                    "session" => Some("Session"),
+                    "sessions" => Some("Sessions"),
+                    "transaction" => Some("Transaction"),
                     _ => unreachable!(),
                 },
                 _ => None,
