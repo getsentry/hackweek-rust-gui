@@ -1,4 +1,6 @@
-type Map = serde_json::value::Map<String, serde_json::Value>;
+use serde_json::Value;
+
+type Map = serde_json::value::Map<String, Value>;
 
 #[derive(Clone, Debug, Default)]
 pub struct Envelope {
@@ -12,7 +14,7 @@ impl Envelope {
         let mut stream = serde_json::Deserializer::from_slice(&buf).into_iter();
 
         let (header, offset) = match stream.next() {
-            Some(Ok(h)) => (h, stream.byte_offset()),
+            Some(Ok(h)) => (h, stream.byte_offset() + 1),
             _ => (Default::default(), 0),
         };
 
@@ -26,9 +28,7 @@ impl Envelope {
     pub fn into_inner(self) -> Vec<u8> {
         self.buf
     }
-}
 
-impl Envelope {
     pub fn items(&self) -> EnvelopeItemIter {
         EnvelopeItemIter {
             buf: &self.buf[self.offset..],
@@ -68,14 +68,19 @@ impl<'buf> Iterator for EnvelopeItemIter<'buf> {
     type Item = EnvelopeItem<'buf>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.buf.is_empty() {
+        let mut buf = self.buf;
+        while buf.starts_with(b"\n") {
+            buf = &buf[1..];
+        }
+
+        if buf.is_empty() {
             return None;
         }
 
-        let mut stream = serde_json::Deserializer::from_slice(self.buf).into_iter();
+        let mut stream = serde_json::Deserializer::from_slice(buf).into_iter();
         match stream.next() {
             Some(Ok(h)) => {
-                let buf = &self.buf[stream.byte_offset()..];
+                let buf = &buf[stream.byte_offset() + 1..];
                 let len = get_header_len(&h)
                     .or_else(|| buf.iter().position(|b| *b == b'\n'))
                     .unwrap_or(buf.len());
