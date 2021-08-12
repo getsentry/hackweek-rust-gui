@@ -1,7 +1,7 @@
 import { MultilineEdit, FileBox } from "widgets.60";
 import { Theme } from "theme.60";
 
-struct Attachment := {
+export struct Attachment := {
     name: string,
     contents: string,
 }

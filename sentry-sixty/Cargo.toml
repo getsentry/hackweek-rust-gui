@@ -16,6 +16,7 @@ sentry-core = "0.23"
 sentry-uploader = { path = "../sentry-uploader" }
 tokio = { version = "1.9", features = ["rt"] }
 anyhow = "1.0.42"
+bytes = "1.0.1"
 
 [build-dependencies]
 sixtyfps-build = "0.1.0"

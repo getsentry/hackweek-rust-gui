@@ -1,5 +1,5 @@
 import { Header } from "header.60";
-import { Body } from "body.60";
+import { Body, Attachment } from "body.60";
 import { Footer } from "footer.60";
 
 global Theme := {
@@ -18,6 +18,7 @@ export MainWindow := Window {
     property header_subtitle <=> header.subtitle;
     // Step 1: attached files. Step 2: Additional feedback.
     property<int> step: 1;
+    property<[Attachment]> attachments <=> body.attachments;
     property body_comment_label_text <=> body.comment_label_text;
     property body_comment_placeholder <=> body.comment_placeholder;
     property body_files_label_text <=> body.files_label_text;
@@ -32,7 +33,6 @@ export MainWindow := Window {
     VerticalLayout {
         header := Header {}
         body := Body {
-            attachments: [{name: "test1.txt", contents: "Oh hi Mark"}, {name: "test2.txt", contents: "Imma firin mah lazor"}];
             step: root.step;
         }
         footer := Footer {}

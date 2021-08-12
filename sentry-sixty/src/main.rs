@@ -1,6 +1,8 @@
+use std::rc::Rc;
 use std::sync::Arc;
 use std::sync::Mutex;
 
+use bytes::Bytes;
 use i18n_embed::fluent::{fluent_language_loader, FluentLanguageLoader};
 use i18n_embed::DesktopLanguageRequester;
 use i18n_embed_fl::fl;
@@ -9,6 +11,7 @@ use sentry_core::protocol::{EnvelopeItem, Event};
 use sentry_core::types::Uuid;
 use sentry_core::Envelope;
 use sentry_uploader::{Uploader, UserFeedback};
+use sixtyfps::{ModelHandle, VecModel};
 
 #[derive(RustEmbed)]
 #[folder = "../resources/l18n"] // path to the compiled localization resources
@@ -62,11 +65,21 @@ pub fn start_crash_reporter_windows(config: config::Config) {
     envelope.to_writer(&mut raw_envelope).unwrap();
     let raw_envelope = RawEnvelope::parse(raw_envelope);
 
+    let attachments = raw_envelope
+        .items()
+        .map(|item| Attachment {
+            name: item.file_name().into(),
+            contents: "Foo bar".into(),
+        })
+        .collect::<Vec<_>>();
+
     let ui_state = Arc::new(Mutex::new(UiState::SubmitEnvelope { raw_envelope }));
 
     let main_window = MainWindow::new();
     let main_window_weak = main_window.as_weak();
     localize(&main_window, &config.branding);
+
+    main_window.set_attachments(ModelHandle::new(Rc::new(VecModel::from(attachments))));
 
     main_window.on_close_clicked(sixtyfps::quit_event_loop);
 
@@ -78,7 +91,7 @@ pub fn start_crash_reporter_windows(config: config::Config) {
             UiState::SubmitEnvelope {
                 ref mut raw_envelope,
             } => {
-                let raw_envelope = std::mem::take(raw_envelope).into_inner();
+                let raw_envelope = std::mem::take(raw_envelope).into_bytes();
                 let event_id = submit_envelope(uploader, raw_envelope).unwrap();
                 *ui_state = UiState::SubmitFeedback { event_id };
                 main_window_weak.unwrap().set_step(2);
@@ -148,13 +161,13 @@ fn localize(main_window: &MainWindow, branding: &config::Branding) {
     main_window.set_footer_submit_text(fl!(loader, "app-footer-submit").into());
 }
 
-fn submit_envelope(uploader: &Uploader, raw_envelope: Vec<u8>) -> anyhow::Result<Uuid> {
+fn submit_envelope(uploader: &Uploader, raw_envelope: Bytes) -> anyhow::Result<Uuid> {
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
 
-    rt.block_on(async move { uploader.send_envelope(raw_envelope).await })
+    rt.block_on(async move { uploader.send_envelope(raw_envelope.to_vec()).await })
 }
 
 fn submit_feedback(
