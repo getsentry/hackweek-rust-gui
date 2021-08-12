@@ -5,6 +5,7 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1"
+bytes = "1"
 httpdate = "1"
 reqwest = { version = "0.11", features = ["json", "stream"] }
 sentry-core = "0.23"
