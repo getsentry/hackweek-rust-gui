@@ -16,6 +16,8 @@ export MainWindow := Window {
     callback submit_clicked <=> footer.submit_clicked;
     property header_title <=> header.title;
     property header_subtitle <=> header.subtitle;
+    // Step 1: attached files. Step 2: Additional feedback.
+    property<int> step: 1;
     property body_comment_label_text <=> body.comment_label_text;
     property body_comment_placeholder <=> body.comment_placeholder;
     property body_files_label_text <=> body.files_label_text;
@@ -31,6 +33,7 @@ export MainWindow := Window {
         header := Header {}
         body := Body {
             attachments: [{name: "test1.txt", contents: "Oh hi Mark"}, {name: "test2.txt", contents: "Imma firin mah lazor"}];
+            step: root.step;
         }
         footer := Footer {}
     }

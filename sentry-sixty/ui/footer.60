@@ -1,19 +1,19 @@
 import { SentryNormalButton, SentryAccentButton } from "widgets.60";
 
 export Footer := HorizontalLayout {
-    callback close_clicked;
-    callback submit_clicked;
+    callback close_clicked <=> close_button.clicked;
+    callback submit_clicked <=> submit_button.clicked;
 
-    property show_text <=> show_button.text;
-    property close_text <=> close_button.text;
-    property submit_text <=> submit_button.text;
+    property<string> show_text;
+    property<string> close_text;
+    property<string> submit_text;
 
     vertical_stretch: 0;
     padding: 32px;
     spacing: 8px;
 
     show_button := SentryNormalButton {
-        text: "Show Files";
+        text: root.show_text;
     }
 
     Rectangle {
@@ -21,12 +21,10 @@ export Footer := HorizontalLayout {
     }
 
     close_button := SentryNormalButton {
-        clicked => { root.close_clicked(); }
-        text: "Close";
+        text: root.close_text;
     }
 
     submit_button := SentryAccentButton {
-        clicked => { root.submit_clicked(); }
-        text: "Submit";
+        text: root.submit_text;
     }
 }

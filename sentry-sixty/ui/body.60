@@ -7,36 +7,42 @@ struct Attachment := {
 }
 
 export Body := VerticalLayout {
-    property comment_label_text <=> comment_label.text;
-    property comment_placeholder <=> comment_box.placeholder_text;
-    property files_label_text <=> files_label.text;
+    property<string> comment_label_text;
+    property<string> comment_placeholder;
+    property<string> files_label_text; 
     property<string> show_button_text;
     property<string> hide_button_text;
     property<[Attachment]> attachments;
+    // Step 1: attached files. Step 2: Additional feedback.
+    property<int> step: 1;
     vertical_stretch: 1;
     padding: 32px;
     spacing: 8px;
 
-    comment_label := Text {
-        font_size: 14px;
-        font_weight: 400;
-        text: "Comment (optional)";
-    }
-    comment_box := MultilineEdit {
-        placeholder_text: "It exploded on impact";
+    if (step == 1): body_inner := VerticalLayout {
+        files_label := Text {
+            font_size: 14px;
+            font_weight: 400;
+            text: root.files_label_text;
+        }
+
+        for file[index] in attachments: FileBox {
+            file_name: file.name;
+            file_contents: file.contents;
+            show_button_text: root.show_button_text;
+            hide_button_text: root.hide_button_text;
+        }
     }
 
-    files_label := Text {
-        font_size: 14px;
-        font_weight: 400;
-        text: "Files";
-    }
-
-    for file[index] in attachments: FileBox {
-        file_name: file.name;
-        file_contents: file.contents;
-        show_button_text: root.show_button_text;
-        hide_button_text: root.hide_button_text;
+    if (step == 2): body_inner := VerticalLayout {
+        comment_label := Text {
+            font_size: 14px;
+            font_weight: 400;
+            text: root.comment_label_text;
+        }
+        comment_box := MultilineEdit {
+            placeholder_text: root.comment_placeholder;
+        }
     }
 
     Rectangle {

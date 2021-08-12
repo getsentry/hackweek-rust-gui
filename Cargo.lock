@@ -2497,6 +2497,7 @@ dependencies = [
 name = "sentry-sixty"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "i18n-embed",
  "i18n-embed-fl",
  "rust-embed",
