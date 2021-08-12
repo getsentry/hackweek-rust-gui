@@ -42,6 +42,23 @@ pub struct EnvelopeItem<'buf> {
     pub body: &'buf [u8],
 }
 
+impl EnvelopeItem<'_> {
+    pub fn file_name(&self) -> &str {
+        self.header
+            .get("filename")
+            .and_then(|name| name.as_str())
+            .or_else(|| match self.header.get("type") {
+                Some(Value::String(s)) => match s.as_str() {
+                    "event" => Some("Event"),
+                    "attachment" => Some("Attachment"),
+                    _ => unreachable!(),
+                },
+                _ => None,
+            })
+            .unwrap_or("unknown")
+    }
+}
+
 #[derive(Copy, Clone, Debug)]
 pub struct EnvelopeItemIter<'buf> {
     buf: &'buf [u8],
