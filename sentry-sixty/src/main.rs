@@ -16,14 +16,14 @@ struct Localizations;
 
 sixtyfps::include_modules!();
 
-pub mod config;
+use sentry_uploader::Envelope as RawEnvelope;
 
-type RawEnvelope = Vec<u8>;
+pub mod config;
 
 #[derive(Debug, Clone)]
 enum UiState {
-    SubmitEnvelope(RawEnvelope),
-    SubmitFeedback(Uuid),
+    SubmitEnvelope { raw_envelope: RawEnvelope },
+    SubmitFeedback { event_id: Uuid },
 }
 
 fn make_mock_envelope() -> Envelope {
@@ -60,8 +60,9 @@ pub fn start_crash_reporter_windows(config: config::Config) {
 
     let mut raw_envelope = Vec::new();
     envelope.to_writer(&mut raw_envelope).unwrap();
+    let raw_envelope = RawEnvelope::parse(raw_envelope);
 
-    let ui_state = Arc::new(Mutex::new(UiState::SubmitEnvelope(raw_envelope)));
+    let ui_state = Arc::new(Mutex::new(UiState::SubmitEnvelope { raw_envelope }));
 
     let main_window = MainWindow::new();
     let main_window_weak = main_window.as_weak();
@@ -74,13 +75,15 @@ pub fn start_crash_reporter_windows(config: config::Config) {
         let uploader = uploader.as_ref();
         let mut ui_state = ui_state.lock().unwrap();
         match *ui_state {
-            UiState::SubmitEnvelope(ref mut raw_envelope) => {
-                let raw_envelope = std::mem::take(raw_envelope);
-                let event_id = submit_envelope(&uploader, raw_envelope).unwrap();
-                *ui_state = UiState::SubmitFeedback(event_id);
+            UiState::SubmitEnvelope {
+                ref mut raw_envelope,
+            } => {
+                let raw_envelope = std::mem::take(raw_envelope).into_inner();
+                let event_id = submit_envelope(uploader, raw_envelope).unwrap();
+                *ui_state = UiState::SubmitFeedback { event_id };
                 main_window_weak.unwrap().set_step(2);
             }
-            UiState::SubmitFeedback(event_id) => {
+            UiState::SubmitFeedback { event_id } => {
                 let mut user_feedback = sentry_uploader::UserFeedback::default();
                 // TODO: take the values from the UI, and only send user feedback if all
                 // the required fields are provided
@@ -88,7 +91,7 @@ pub fn start_crash_reporter_windows(config: config::Config) {
                 user_feedback.email = String::from("bender@planetexpress.earth");
                 user_feedback.comment = String::from("oh noes! its a me, user feedbackaaaa!");
 
-                submit_feedback(&uploader, event_id, &user_feedback).unwrap();
+                submit_feedback(uploader, event_id, &user_feedback).unwrap();
 
                 sixtyfps::quit_event_loop()
             }

@@ -1,37 +1,48 @@
 type Map = serde_json::value::Map<String, serde_json::Value>;
 
-pub struct Envelope<'buf> {
+#[derive(Clone, Debug, Default)]
+pub struct Envelope {
+    buf: Vec<u8>,
     pub header: Map,
-    body: &'buf [u8],
+    offset: usize,
 }
 
-impl<'buf> Envelope<'buf> {
-    pub fn parse(mut buf: &'buf [u8]) -> Self {
-        let mut stream = serde_json::Deserializer::from_slice(buf).into_iter();
+impl Envelope {
+    pub fn parse(buf: Vec<u8>) -> Self {
+        let mut stream = serde_json::Deserializer::from_slice(&buf).into_iter();
 
-        let header = match stream.next() {
-            Some(Ok(h)) => {
-                buf = &buf[stream.byte_offset()..];
-                h
-            }
-            _ => Default::default(),
+        let (header, offset) = match stream.next() {
+            Some(Ok(h)) => (h, stream.byte_offset()),
+            _ => (Default::default(), 0),
         };
 
-        Self { header, body: buf }
+        Self {
+            buf,
+            header,
+            offset,
+        }
+    }
+
+    pub fn into_inner(self) -> Vec<u8> {
+        self.buf
     }
 }
 
-impl<'buf> Envelope<'buf> {
-    pub fn items(&self) -> EnvelopeItemIter<'buf> {
-        EnvelopeItemIter { buf: self.body }
+impl Envelope {
+    pub fn items(&self) -> EnvelopeItemIter {
+        EnvelopeItemIter {
+            buf: &self.buf[self.offset..],
+        }
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct EnvelopeItem<'buf> {
     pub header: Map,
     pub body: &'buf [u8],
 }
 
+#[derive(Copy, Clone, Debug)]
 pub struct EnvelopeItemIter<'buf> {
     buf: &'buf [u8],
 }
