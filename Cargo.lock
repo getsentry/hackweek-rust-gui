@@ -54,6 +54,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23b62fc65de8e4e7f52534fb52b0f3ed04746ae267519eef2a83941e8085068b"
 
 [[package]]
+name = "async-compression"
+version = "0.3.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5443ccbb270374a2b1055fc72da40e1f237809cd6bb0e97e66d264cd138473a6"
+dependencies = [
+ "flate2",
+ "futures-core",
+ "memchr",
+ "pin-project-lite",
+ "tokio",
+]
+
+[[package]]
 name = "atty"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2517,11 +2530,13 @@ name = "sentry-uploader"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-compression",
  "httpdate",
  "reqwest",
  "sentry-core",
  "serde",
  "serde_json",
+ "tokio-util",
 ]
 
 [[package]]

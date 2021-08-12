@@ -1,5 +1,5 @@
 use sentry_core::types::Uuid;
-use sentry_core::Envelope;
+use serde::Deserialize;
 
 use crate::{Config, UserFeedback};
 
@@ -10,6 +10,11 @@ pub struct Uploader {
     dsn_auth: String,
     envelope_url: String,
     user_feedback_url: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct SendEnvelopeResponse {
+    id: Uuid,
 }
 
 impl Uploader {
@@ -42,16 +47,22 @@ impl Uploader {
     }
 
     /// Send the given envelope to the configured DSN.
-    pub async fn send_envelope(&self, envelope: &Envelope) -> anyhow::Result<()> {
-        // TODO: maybe not worth it, but can we actually write the envelope onto the body stream directly, instead
-        // of first allocating a byte vector ahead of time?
-        // TODO: can we gzip the body?
-        let mut body = Vec::new();
-        envelope.to_writer(&mut body).unwrap();
+    // TODO: we have to take `raw_envelope` as an owned type, because it needs to
+    // satisfy `'static` for some reason I don’t fully understand yet.
+    pub async fn send_envelope(&self, raw_envelope: Vec<u8>) -> anyhow::Result<Uuid> {
+        // Well, we do know that relay supports at least gzip. Might as well use
+        // zstd as that is supposed to be faster
+        // rant: Well, if `AsyncRead` would be a `std` trait, we probably wouldn’t
+        // need all these wrapper types here?
+        let body = reqwest::Body::wrap_stream(tokio_util::io::ReaderStream::new(
+            async_compression::tokio::bufread::GzipEncoder::new(std::io::Cursor::new(raw_envelope)),
+        ));
+
         let request = self
             .client
             .post(&self.envelope_url)
             .header("X-Sentry-Auth", &self.sentry_auth)
+            .header(reqwest::header::CONTENT_ENCODING, "gzip")
             .body(body);
 
         let response = request.send().await?;
@@ -59,11 +70,9 @@ impl Uploader {
         if response.status() == reqwest::StatusCode::TOO_MANY_REQUESTS {
             anyhow::bail!("DSN quota exceeded");
         }
-        let _json = response.text().await?;
 
-        // TODO: return the event id
-        // TODO: is it possible to somehow feed the upload progress back to the UI?
-        Ok(())
+        let json: SendEnvelopeResponse = response.json().await?;
+        Ok(json.id)
     }
 
     /// Submit a User Feedback report
@@ -73,7 +82,7 @@ impl Uploader {
         &self,
         event_id: Uuid,
         user_feedback: &UserFeedback,
-    ) -> anyhow::Result<()> {
+    ) -> anyhow::Result<bool> {
         let request = self
             .client
             .post(&self.user_feedback_url)
@@ -88,9 +97,8 @@ impl Uploader {
                 "comments": user_feedback.comment,
             }));
 
-        let _json = request.send().await?.text().await?;
+        let response = request.send().await?;
 
-        // TODO: should we validate that the report has actually been submitted?
-        Ok(())
+        Ok(response.status().is_success())
     }
 }

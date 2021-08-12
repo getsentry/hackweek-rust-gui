@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use i18n_embed::fluent::{fluent_language_loader, FluentLanguageLoader};
 use i18n_embed::DesktopLanguageRequester;
 use i18n_embed_fl::fl;
@@ -38,25 +40,33 @@ pub fn start_crash_reporter_windows(config: config::Config) {
         config.sentry.org_slug.clone(),
         config.sentry.project_slug.clone(),
     );
-    let uploader = sentry_uploader::Uploader::new(uploader_config);
+    let uploader = Arc::new(sentry_uploader::Uploader::new(uploader_config));
 
-    let envelope = make_mock_envelope();
+    let envelope = Arc::new(make_mock_envelope());
+
+    // we move one ref into the submit callback (for now, possibly more callbacks soon)
+    let uploader = Arc::clone(&uploader);
+    let envelope = Arc::clone(&envelope);
 
     localize(&main_window, &config.branding);
     main_window.on_close_clicked(sixtyfps::quit_event_loop);
+
     main_window.on_submit_clicked(move || {
         let rt = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
             .unwrap();
 
-        // make borrow checker happy
-        let envelope = &envelope;
-        let uploader = &uploader;
-        rt.block_on(async move {
-            uploader.send_envelope(envelope).await?;
+        // make borrow checker happy for now.
+        let envelope = envelope.as_ref();
+        let uploader = uploader.as_ref();
 
-            let event_id = envelope.uuid().unwrap().to_owned();
+        rt.block_on(async move {
+            let mut raw_envelope = Vec::new();
+            envelope.to_writer(&mut raw_envelope).unwrap();
+
+            let event_id = uploader.send_envelope(raw_envelope).await?;
+
             let mut user_feedback = sentry_uploader::UserFeedback::default();
             // TODO: take the values from the UI, and only send user feedback if all
             // the required fields are provided
@@ -70,6 +80,9 @@ pub fn start_crash_reporter_windows(config: config::Config) {
 
             Ok::<_, Box<dyn std::error::Error>>(())
         })
+        // TODO: surface any kind of errors up to the UI. though the only action
+        // in that case would be to say uploading failed, and the user will just
+        // close the app.
         .unwrap();
         sixtyfps::quit_event_loop();
     });

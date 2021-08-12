@@ -6,7 +6,9 @@ edition = "2018"
 [dependencies]
 anyhow = "1"
 httpdate = "1"
-reqwest = { version = "0.11", features = ["json"] }
+reqwest = { version = "0.11", features = ["json", "stream"] }
 sentry-core = "0.23"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+async-compression = { version = "0.3.7", default-features = false, features = ["tokio", "gzip"] }
+tokio-util = { version = "0.6.0", default-features = false, features = ["codec", "io"] }
