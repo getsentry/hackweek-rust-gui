@@ -32,6 +32,8 @@ pub fn localize(main_window: &MainWindow, branding: &Branding) {
         )
         .into(),
     );
+    main_window.set_body_name_label_text(fl!(loader, "form-name-label").into());
+    main_window.set_body_email_label_text(fl!(loader, "form-email-label").into());
     main_window.set_body_comment_label_text(fl!(loader, "form-comment-label").into());
     main_window.set_body_comment_placeholder(fl!(loader, "form-comment-placeholder").into());
     main_window.set_body_files_label_text(fl!(loader, "app-body-files-label").into());

@@ -59,9 +59,9 @@ pub fn start_crash_reporter_window(
                 let mut user_feedback = sentry_uploader::UserFeedback::default();
                 // TODO: take the values from the UI, and only send user feedback if all
                 // the required fields are provided
-                user_feedback.name = String::from("Bender");
-                user_feedback.email = String::from("bender@planetexpress.earth");
-                user_feedback.comment = String::from("oh noes! its a me, user feedbackaaaa!");
+                user_feedback.name = main_window_weak.unwrap().get_body_name().into();
+                user_feedback.email = main_window_weak.unwrap().get_body_email().into();
+                user_feedback.comment = main_window_weak.unwrap().get_body_comment_text().into();
 
                 submit_feedback(uploader, event_id, &user_feedback).unwrap();
 

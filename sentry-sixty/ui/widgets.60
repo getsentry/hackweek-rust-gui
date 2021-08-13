@@ -1,4 +1,5 @@
 import { Theme } from "theme.60";
+import { ScrollView } from "sixtyfps_widgets.60";
 
 export SentryNormalButton := Rectangle {
     callback clicked <=> touch_area.clicked;
@@ -122,6 +123,40 @@ export MultilineEdit := Rectangle {
     }
 }
 
+//VerticalScrollView := Rectangle {
+//    property <length> viewport-width <=> fli.viewport-width;
+//    property <length> viewport-height <=> fli.viewport-height;
+//    property <length> viewport-x <=> fli.viewport-x;
+//    property <length> viewport-y <=> fli.viewport-y;
+//    property <length> visible-width <=> fli.width;
+//    property <length> visible-height <=> fli.height;
+//    min-height: 50px;
+//    min-width: 50px;
+//    horizontal-stretch: 1;
+//    vertical-stretch: 1;
+//
+//    fli := Flickable {
+//        @children
+//        x: 1px;
+//        y: 1px;
+//        interactive: false;
+//        viewport-y <=> vbar.value;
+//        viewport-x: 0;
+//        viewport-height: 1000px;
+//        viewport-width: 1000px;
+//        width: parent.width - vbar.width - 1px;
+//        height: parent.height - 1px;
+//    }
+//    vbar := ScrollBar {
+//        width: 16px;
+//        x: fli.width + fli.x;
+//        height: fli.height + fli.y;
+//        horizontal: false;
+//        max: fli.viewport-height - fli.height;
+//        page-size: fli.height;
+//    }
+//}
+
 export FileBox := Rectangle {
     property<string> file_name;
     property<string> file_contents;
@@ -136,12 +171,24 @@ export FileBox := Rectangle {
     background: Theme.background_secondary;
 
     VerticalLayout {
-        if (is_expanded): contents := Text {
-            //background: Theme.background_primary;
-            text: root.file_contents;
-            font_size: 14px;
-            font_weight: 400;
+        if (is_expanded): contents := ScrollView {
+            VerticalLayout {
+            padding_top: 8px;
+            padding_bottom: 8px;
+            padding_left: 16px;
+            padding_right: 16px;
+            width: parent.width;
+            
+            Text {
+                //background: Theme.background_primary;
+                text: root.file_contents;
+                font_size: 14px;
+                font_weight: 400;
+                wrap: word_wrap;
+                width: parent.width;
+            }
         }
+}
         HorizontalLayout {
             padding_top: 8px;
             padding_bottom: 8px;
