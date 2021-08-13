@@ -4,17 +4,12 @@ export Footer := HorizontalLayout {
     callback close_clicked <=> close_button.clicked;
     callback submit_clicked <=> submit_button.clicked;
 
-    property<string> show_text;
     property<string> close_text;
     property<string> submit_text;
 
     vertical_stretch: 0;
     padding: 32px;
     spacing: 8px;
-
-    show_button := SentryNormalButton {
-        text: root.show_text;
-    }
 
     Rectangle {
         horizontal_stretch: 1;

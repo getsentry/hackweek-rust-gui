@@ -29,7 +29,6 @@ export MainWindow := Window {
     property body_files_label_text <=> body.files_label_text;
     property body_show_button_text <=> body.show_button_text;
     property body_hide_button_text <=> body.hide_button_text;
-    property footer_show_text <=> footer.show_text;
     property footer_close_text <=> footer.close_text;
     property footer_submit_text <=> footer.submit_text;
 
