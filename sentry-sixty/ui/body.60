@@ -44,27 +44,20 @@ export Body := VerticalLayout {
     }
 
     if (step == 2): VerticalLayout {
-        HorizontalLayout {
-            VerticalLayout {
-                name_label := Text {
-                    font_size: 14px;
-                    font_weight: 400;
-                    text: root.name_label_text;
-                }
-
-                name_box := LineEdit { text <=> root.name; }
-            }
- 
-            VerticalLayout {
-                email_label := Text {
-                    font_size: 14px;
-                    font_weight: 400;
-                    text: root.email_label_text;
-                }
-
-                email_box := LineEdit { text <=> root.email; }
-            }
+        name_label := Text {
+            font_size: 14px;
+            font_weight: 400;
+            text: root.name_label_text;
         }
+        name_box := LineEdit { text <=> root.name; }
+
+        email_label := Text {
+            font_size: 14px;
+            font_weight: 400;
+            text: root.email_label_text;
+        }
+        email_box := LineEdit { text <=> root.email; }
+
         comment_label := Text {
             font_size: 14px;
             font_weight: 400;
