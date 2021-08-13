@@ -27,6 +27,7 @@ export Body := VerticalLayout {
     min_height: 560px;
 
     if (step == 1): VerticalLayout {
+        spacing: 8px;
         files_label := Text {
             font_size: 14px;
             font_weight: 400;
