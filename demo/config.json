@@ -1,0 +1,10 @@
+{
+  "branding": {
+    "app_name": "Sentry"
+  },
+  "sentry": {
+    "dsn": "https://afb46d25eecb4cdb8653f859aa980181@o19635.ingest.sentry.io/1041156",
+    "org_slug": "sentry-test",
+    "project_slug": "rust"
+  }
+}
