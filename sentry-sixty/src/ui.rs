@@ -30,13 +30,7 @@ pub fn start_crash_reporter_window(
     // we move one ref into the submit callback (for now, possibly more callbacks soon)
     let uploader = Arc::clone(&uploader);
 
-    let attachments = raw_envelope
-        .items()
-        .map(|item| Attachment {
-            name: item.file_name().into(),
-            contents: "Foo bar".into(),
-        })
-        .collect::<Vec<_>>();
+    let attachments = get_attachments(&raw_envelope);
 
     let ui_state = Arc::new(Mutex::new(UiState::SubmitEnvelope { raw_envelope }));
 
@@ -44,7 +38,7 @@ pub fn start_crash_reporter_window(
     let main_window_weak = main_window.as_weak();
     localize(&main_window, &branding);
 
-    main_window.set_attachments(ModelHandle::new(Rc::new(VecModel::from(attachments))));
+    main_window.set_attachments(attachments);
 
     main_window.on_close_clicked(sixtyfps::quit_event_loop);
 
@@ -104,4 +98,18 @@ fn submit_feedback(
         .unwrap();
 
     rt.block_on(async move { uploader.send_user_feedback(event_id, feedback).await })
+}
+
+fn get_attachments(raw_envelope: &RawEnvelope) -> ModelHandle<Attachment> {
+    let attachments_vec = raw_envelope
+        .items()
+        .map(|item| {
+            let name = item.file_name().into();
+            let contents = String::from_utf8(item.body.to_vec())
+                .unwrap_or_else(|_| String::from("binary data"))
+                .into();
+            Attachment { name, contents }
+        })
+        .collect::<Vec<_>>();
+    ModelHandle::new(Rc::new(VecModel::from(attachments_vec)))
 }
