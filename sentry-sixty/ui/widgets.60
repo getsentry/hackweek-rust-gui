@@ -172,6 +172,7 @@ export FileBox := Rectangle {
 
     VerticalLayout {
         if (is_expanded): contents := ScrollView {
+            min_height: 200px;
             VerticalLayout {
             padding_top: 8px;
             padding_bottom: 8px;
