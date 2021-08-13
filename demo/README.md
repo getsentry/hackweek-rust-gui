@@ -29,6 +29,8 @@
 - Rust-native GUI toolkits are very immature, as expected
 - Still very much a R&D target
 - Choices might be very opinionated
+- Builtin Widgets either lack stylability, or functionality
+  - eg. multiline textboxes with correct key combos, scrollboxes, tab order, etc
 
 ## Demo
 
