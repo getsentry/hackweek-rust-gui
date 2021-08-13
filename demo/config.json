@@ -1,6 +1,6 @@
 {
   "branding": {
-    "app_name": "Sentry"
+    "app_name": "My super great App!"
   },
   "sentry": {
     "dsn": "https://afb46d25eecb4cdb8653f859aa980181@o19635.ingest.sentry.io/1041156",
