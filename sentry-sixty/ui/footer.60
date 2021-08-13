@@ -6,6 +6,7 @@ export Footer := HorizontalLayout {
 
     property<string> close_text;
     property<string> submit_text;
+    property<bool> submit_enabled;
 
     vertical_stretch: 0;
     padding: 32px;
@@ -21,5 +22,7 @@ export Footer := HorizontalLayout {
 
     submit_button := SentryAccentButton {
         text: root.submit_text;
+        enabled: root.submit_enabled;
+        opacity: enabled ? 1.0 : 0.5;
     }
 }

@@ -14,6 +14,7 @@ global Theme := {
 export MainWindow := Window {
     callback close_clicked <=> footer.close_clicked;
     callback submit_clicked <=> footer.submit_clicked;
+    property<bool> submit_enabled: step == 1 || (body_name != "" && body_email != "" && body_comment_text != "");
     property<string> header_title1;
     property<string> header_subtitle1;
     property<string> header_title2;
@@ -44,6 +45,8 @@ export MainWindow := Window {
         body := Body {
             step: root.step;
         }
-        footer := Footer {}
+        footer := Footer {
+            submit_enabled: root.submit_enabled;
+        }
     }
 }
