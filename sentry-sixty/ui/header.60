@@ -6,15 +6,11 @@ export Header := VerticalLayout {
     property subtitle <=> subtitle_el.text;
 
     title_el := Text {
-        //text: { translate("id") }
-        //text: "{app-title} has Crashed.";
-        //text: root.title;
         font_size: 22px;
         color: #2B1D38;
     }
 
     subtitle_el := Text {
-        //text: "This report will be sent to {app-title} on submission";
         font_size: 14px;
         color: #776589;
     }

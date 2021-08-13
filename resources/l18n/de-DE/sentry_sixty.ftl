@@ -1,5 +1,8 @@
 app-header-title = {$appname} ist abgestürzt.
-app-header-subtitle = Dieser Bericht wird beim absenden an {$appname} gesendet.
+app-header-subtitle = Dieser Bericht wird beim Absenden an {$appname} gesendet.
+
+app-header-title2 = Zusätzliches Feedback abgeben (optional)
+app-header-subtitle2 = Teilen Sie uns mit, was schiefgegangen ist
 
 form-name-label = Name
 form-email-label = Email-Adresse

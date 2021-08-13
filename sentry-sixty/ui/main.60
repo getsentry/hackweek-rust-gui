@@ -14,8 +14,10 @@ global Theme := {
 export MainWindow := Window {
     callback close_clicked <=> footer.close_clicked;
     callback submit_clicked <=> footer.submit_clicked;
-    property header_title <=> header.title;
-    property header_subtitle <=> header.subtitle;
+    property<string> header_title1;
+    property<string> header_subtitle1;
+    property<string> header_title2;
+    property<string> header_subtitle2;
     // Step 1: attached files. Step 2: Additional feedback.
     property<int> step: 1;
     property<[Attachment]> attachments <=> body.attachments;
@@ -35,7 +37,10 @@ export MainWindow := Window {
     background: white;
 
     VerticalLayout {
-        header := Header {}
+        header := Header {
+            title: (step == 1) ? header_title1 : header_title2;
+            subtitle: (step == 1) ? header_subtitle1: header_subtitle2;
+        }
         body := Body {
             step: root.step;
         }

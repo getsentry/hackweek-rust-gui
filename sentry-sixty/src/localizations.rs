@@ -16,7 +16,7 @@ pub fn localize(main_window: &MainWindow, branding: &Branding) {
     let requested_languages = DesktopLanguageRequester::requested_languages();
     let _result = i18n_embed::select(&loader, &Localizations, &requested_languages);
 
-    main_window.set_header_title(
+    main_window.set_header_title1(
         fl!(
             loader,
             "app-header-title",
@@ -24,7 +24,7 @@ pub fn localize(main_window: &MainWindow, branding: &Branding) {
         )
         .into(),
     );
-    main_window.set_header_subtitle(
+    main_window.set_header_subtitle1(
         fl!(
             loader,
             "app-header-subtitle",
@@ -32,6 +32,8 @@ pub fn localize(main_window: &MainWindow, branding: &Branding) {
         )
         .into(),
     );
+    main_window.set_header_title2(fl!(loader, "app-header-title2").into());
+    main_window.set_header_subtitle2(fl!(loader, "app-header-subtitle2").into());
     main_window.set_body_name_label_text(fl!(loader, "form-name-label").into());
     main_window.set_body_email_label_text(fl!(loader, "form-email-label").into());
     main_window.set_body_comment_label_text(fl!(loader, "form-comment-label").into());
