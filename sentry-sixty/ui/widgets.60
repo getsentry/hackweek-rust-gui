@@ -1,5 +1,6 @@
 import { Theme } from "theme.60";
 import { ScrollView } from "sixtyfps_widgets.60";
+import "./monaco.ttf";
 
 export SentryNormalButton := Rectangle {
     callback clicked <=> touch_area.clicked;
@@ -183,6 +184,7 @@ export FileBox := Rectangle {
             Text {
                 //background: Theme.background_primary;
                 text: root.file_contents;
+                font_family: "Monaco";
                 font_size: 14px;
                 font_weight: 400;
                 wrap: word_wrap;
